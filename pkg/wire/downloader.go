@@ -17,6 +17,7 @@ import (
 	"github.com/sirrobot01/decypharr/pkg/debrid/types"
 
 	"github.com/cavaliergopher/grab/v3"
+	"github.com/sirrobot01/decypharr/internal/config"
 	"github.com/sirrobot01/decypharr/internal/utils"
 )
 
