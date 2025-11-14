@@ -93,7 +93,7 @@ func (m *Manager) performMount(mountPath, provider, webdavURL string) error {
 	}
 	mountOpt := map[string]interface{}{
 		"AllowNonEmpty": true,
-		"AllowOther":    true,
+		"AllowOther":    false,
 		"DebugFUSE":     false,
 		"DeviceName":    fmt.Sprintf("decypharr-%s", provider),
 		"VolumeName":    fmt.Sprintf("decypharr-%s", provider),

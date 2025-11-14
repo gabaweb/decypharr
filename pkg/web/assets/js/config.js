@@ -88,6 +88,9 @@ class ConfigManager {
         // Load rclone config
         this.populateRcloneSettings(config.rclone);
 
+        // Load MediaFlow Proxy config
+        this.populateMediaFlowSettings(config.mediaflow_proxy);
+
         // Load API token info
         this.populateAPIToken(config);
     }
@@ -109,6 +112,23 @@ class ConfigManager {
         if (config.allowed_file_types && Array.isArray(config.allowed_file_types)) {
             document.querySelector('[name="allowed_file_types"]').value = config.allowed_file_types.join(', ');
         }
+    }
+
+    populateMediaFlowSettings(config) {
+        if (!config) return;
+
+        const fields = ['enabled', 'url', 'api_password'];
+
+        fields.forEach(field => {
+            const element = document.querySelector(`[name="mediaflow_proxy.${field}"]`);
+            if (element && config[field] !== undefined) {
+                if (element.type === 'checkbox') {
+                    element.checked = config[field];
+                } else {
+                    element.value = config[field];
+                }
+            }
+        });
     }
 
     populateQBittorrentSettings(qbitConfig) {
@@ -1096,7 +1116,10 @@ class ConfigManager {
             repair: this.collectRepairConfig(),
 
             // Rclone configuration
-            rclone: this.collectRcloneConfig()
+            rclone: this.collectRcloneConfig(),
+
+            // MediaFlow Proxy configuration
+            mediaflow_proxy: this.collectMediaFlowConfig()
         };
     }
 
@@ -1269,6 +1292,14 @@ class ConfigManager {
             no_modtime: getElementValue('no_modtime', false),
             no_checksum: getElementValue('no_checksum', false),
             log_level: getElementValue('log_level', 'INFO'),
+        };
+    }
+
+    collectMediaFlowConfig() {
+        return {
+            enabled: document.querySelector('[name="mediaflow_proxy.enabled"]')?.checked || false,
+            url: document.querySelector('[name="mediaflow_proxy.url"]')?.value || '',
+            api_password: document.querySelector('[name="mediaflow_proxy.api_password"]')?.value || ''
         };
     }
 

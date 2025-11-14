@@ -350,6 +350,7 @@ func (s *Store) downloadFiles(torrent *Torrent, debridTorrent *types.Torrent, pa
 		},
 	}
 	errChan := make(chan error, len(debridTorrent.Files))
+	cfg := config.Get()
 	for _, file := range debridTorrent.GetFiles() {
 		if file.DownloadLink.Empty() {
 			s.logger.Info().Msgf("No download link found for %s", file.Name)
@@ -362,9 +363,16 @@ func (s *Store) downloadFiles(torrent *Torrent, debridTorrent *types.Torrent, pa
 			defer func() { <-s.downloadSemaphore }()
 			filename := file.Name
 
+			// Wrap the download URL with MediaFlow Proxy if enabled
+			downloadURL := cfg.WrapWithMediaFlowProxy(file.DownloadLink.DownloadLink)
+			
+			if cfg.MediaFlowProxy.Enabled {
+				s.logger.Debug().Msgf("Using MediaFlow Proxy for %s", filename)
+			}
+
 			err := grabber(
 				client,
-				file.DownloadLink.DownloadLink,
+				downloadURL,
 				filepath.Join(parent, filename),
 				file.ByteRange,
 				progressCallback,

@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -132,29 +133,36 @@ type Rclone struct {
 	LogLevel string `json:"log_level,omitempty"`
 }
 
+type MediaFlowProxy struct {
+	Enabled     bool   `json:"enabled,omitempty"`
+	URL         string `json:"url,omitempty"`
+	APIPassword string `json:"api_password,omitempty"`
+}
+
 type Config struct {
 	// server
 	BindAddress string `json:"bind_address,omitempty"`
 	URLBase     string `json:"url_base,omitempty"`
 	Port        string `json:"port,omitempty"`
 
-	LogLevel           string      `json:"log_level,omitempty"`
-	Debrids            []Debrid    `json:"debrids,omitempty"`
-	QBitTorrent        QBitTorrent `json:"qbittorrent,omitempty"`
-	Arrs               []Arr       `json:"arrs,omitempty"`
-	Repair             Repair      `json:"repair,omitempty"`
-	WebDav             WebDav      `json:"webdav,omitempty"`
-	Rclone             Rclone      `json:"rclone,omitempty"`
-	AllowedExt         []string    `json:"allowed_file_types,omitempty"`
-	MinFileSize        string      `json:"min_file_size,omitempty"` // Minimum file size to download, 10MB, 1GB, etc
-	MaxFileSize        string      `json:"max_file_size,omitempty"` // Maximum file size to download (0 means no limit)
-	Path               string      `json:"-"`                       // Path to save the config file
-	UseAuth            bool        `json:"use_auth,omitempty"`
-	Auth               *Auth       `json:"-"`
-	DiscordWebhook     string      `json:"discord_webhook_url,omitempty"`
-	RemoveStalledAfter string      `json:"remove_stalled_after,omitzero"`
-	CallbackURL        string      `json:"callback_url,omitempty"`
-	EnableWebdavAuth   bool        `json:"enable_webdav_auth,omitempty"`
+	LogLevel           string         `json:"log_level,omitempty"`
+	Debrids            []Debrid       `json:"debrids,omitempty"`
+	QBitTorrent        QBitTorrent    `json:"qbittorrent,omitempty"`
+	Arrs               []Arr          `json:"arrs,omitempty"`
+	Repair             Repair         `json:"repair,omitempty"`
+	WebDav             WebDav         `json:"webdav,omitempty"`
+	Rclone             Rclone         `json:"rclone,omitempty"`
+	MediaFlowProxy     MediaFlowProxy `json:"mediaflow_proxy,omitempty"`
+	AllowedExt         []string       `json:"allowed_file_types,omitempty"`
+	MinFileSize        string         `json:"min_file_size,omitempty"` // Minimum file size to download, 10MB, 1GB, etc
+	MaxFileSize        string         `json:"max_file_size,omitempty"` // Maximum file size to download (0 means no limit)
+	Path               string         `json:"-"`                       // Path to save the config file
+	UseAuth            bool           `json:"use_auth,omitempty"`
+	Auth               *Auth          `json:"-"`
+	DiscordWebhook     string         `json:"discord_webhook_url,omitempty"`
+	RemoveStalledAfter string         `json:"remove_stalled_after,omitzero"`
+	CallbackURL        string         `json:"callback_url,omitempty"`
+	EnableWebdavAuth   bool           `json:"enable_webdav_auth,omitempty"`
 }
 
 func (c *Config) JsonFile() string {
@@ -516,4 +524,35 @@ func Reload() {
 
 func DefaultFreeSlot() int {
 	return 10
+}
+
+// WrapWithMediaFlowProxy wraps a download URL with MediaFlow Proxy if enabled
+func (c *Config) WrapWithMediaFlowProxy(downloadURL string) string {
+	if !c.MediaFlowProxy.Enabled || c.MediaFlowProxy.URL == "" {
+		return downloadURL
+	}
+
+	// Build the MediaFlow Proxy URL
+	proxyURL := c.MediaFlowProxy.URL
+	if !strings.HasSuffix(proxyURL, "/") {
+		proxyURL += "/"
+	}
+	proxyURL += "proxy/stream"
+	
+	// Parse and build the final URL with query parameters
+	u, err := url.Parse(proxyURL)
+	if err != nil {
+		// If parsing fails, return original URL
+		return downloadURL
+	}
+	
+	// Add query parameters
+	q := u.Query()
+	q.Set("d", downloadURL)
+	if c.MediaFlowProxy.APIPassword != "" {
+		q.Set("api_password", c.MediaFlowProxy.APIPassword)
+	}
+	u.RawQuery = q.Encode()
+	
+	return u.String()
 }

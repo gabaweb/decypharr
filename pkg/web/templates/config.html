@@ -39,6 +39,10 @@
                             <i class="bi bi-hdd-stack text-lg"></i>
                             <span class="hidden sm:inline">Rclone</span>
                         </button>
+                        <button type="button" class="tab-button flex items-center gap-2 py-3 px-1 border-b-2 border-transparent text-base-content/70 hover:text-base-content hover:border-base-300 font-medium text-sm transition-colors" data-tab="mediaflow">
+                            <i class="bi bi-globe text-lg"></i>
+                            <span class="hidden sm:inline">MediaFlow</span>
+                        </button>
                     </nav>
                 </div>
 
@@ -768,6 +772,89 @@
                                             </label>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content hidden" data-tab-content="mediaflow">
+                        <div class="space-y-6">
+                            <h2 class="text-2xl font-bold flex items-center mb-6">
+                                <i class="bi bi-globe mr-3 text-success"></i>MediaFlow Proxy Settings
+                            </h2>
+
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i>
+                                <div>
+                                    <h3 class="font-bold">About MediaFlow Proxy</h3>
+                                    <div class="text-sm">MediaFlow Proxy allows you to route all debrid downloads through a proxy server. This can help with geo-restrictions, load balancing, and improving download speeds.</div>
+                                </div>
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label cursor-pointer justify-start gap-3">
+                                    <input type="checkbox" class="checkbox checkbox-lg" name="mediaflow_proxy.enabled" id="mediaflow_proxy.enabled">
+                                    <div>
+                                        <span class="label-text font-medium text-lg">Enable MediaFlow Proxy</span>
+                                        <div class="label-text-alt">Route all debrid downloads through MediaFlow Proxy</div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div class="form-control">
+                                    <label class="label" for="mediaflow_proxy.url">
+                                        <span class="label-text font-medium">MediaFlow Proxy URL</span>
+                                    </label>
+                                    <input type="url" class="input input-bordered" name="mediaflow_proxy.url" id="mediaflow_proxy.url" placeholder="https://your-proxy.example.com">
+                                    <div class="label">
+                                        <span class="label-text-alt">Base URL of your MediaFlow Proxy server (including http:// or https://)</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="label" for="mediaflow_proxy.api_password">
+                                        <span class="label-text font-medium">API Password</span>
+                                    </label>
+                                    <div class="password-toggle-container">
+                                        <input type="password" class="input input-bordered input-has-toggle" name="mediaflow_proxy.api_password" id="mediaflow_proxy.api_password" placeholder="Enter your MediaFlow API password">
+                                        <button type="button" class="password-toggle-btn">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="label">
+                                        <span class="label-text-alt">API password configured in your MediaFlow Proxy server</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card bg-base-200">
+                                <div class="card-body">
+                                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                                        <i class="bi bi-lightbulb mr-2"></i>Quick Setup Guide
+                                    </h3>
+                                    <ol class="list-decimal list-inside space-y-2 text-sm">
+                                        <li>Deploy a MediaFlow Proxy server (see <a href="https://github.com/mhdzumair/mediaflow-proxy" target="_blank" class="link link-primary">MediaFlow Proxy GitHub</a>)</li>
+                                        <li>Enter your MediaFlow Proxy URL above (e.g., <code class="text-xs bg-base-300 px-1 py-0.5 rounded">https://proxy.example.com</code>)</li>
+                                        <li>Enter the API password you configured in MediaFlow Proxy</li>
+                                        <li>Enable the proxy and save the configuration</li>
+                                        <li>All downloads from all debrid services will now use MediaFlow Proxy</li>
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <div class="card bg-base-200">
+                                <div class="card-body">
+                                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                                        <i class="bi bi-check-circle mr-2 text-success"></i>Benefits
+                                    </h3>
+                                    <ul class="list-disc list-inside space-y-2 text-sm">
+                                        <li>Bypass geo-restrictions on debrid services</li>
+                                        <li>Load balance downloads across multiple servers</li>
+                                        <li>Add an additional layer of privacy</li>
+                                        <li>Potentially improve download speeds in certain regions</li>
+                                        <li>Centralized download management</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
