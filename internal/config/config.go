@@ -134,9 +134,9 @@ type Rclone struct {
 }
 
 type MediaFlowProxy struct {
-	Enabled     bool   `json:"enabled,omitempty"`
-	URL         string `json:"url,omitempty"`
-	APIPassword string `json:"api_password,omitempty"`
+	Enabled     bool   `json:"enabled"`
+	URL         string `json:"url"`
+	APIPassword string `json:"api_password"`
 }
 
 type Config struct {

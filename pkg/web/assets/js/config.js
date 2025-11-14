@@ -1296,17 +1296,11 @@ class ConfigManager {
     }
 
     collectMediaFlowConfig() {
-        const enabledEl = document.querySelector('[name="mediaflow_proxy.enabled"]');
-        const urlEl = document.querySelector('[name="mediaflow_proxy.url"]');
-        const passwordEl = document.querySelector('[name="mediaflow_proxy.api_password"]');
-        
-        const config = {
-            enabled: enabledEl ? enabledEl.checked : false,
-            url: urlEl ? urlEl.value : '',
-            api_password: passwordEl ? passwordEl.value : ''
+        return {
+            enabled: document.querySelector('[name="mediaflow_proxy.enabled"]')?.checked || false,
+            url: document.querySelector('[name="mediaflow_proxy.url"]')?.value || '',
+            api_password: document.querySelector('[name="mediaflow_proxy.api_password"]')?.value || ''
         };
-        
-        return config;
     }
 
     setupMagnetHandler() {
