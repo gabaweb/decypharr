@@ -1297,9 +1297,9 @@ class ConfigManager {
 
     collectMediaFlowConfig() {
         return {
-            enabled: document.querySelector('[name="mediaflow_proxy.enabled"]')?.checked || false,
-            url: document.querySelector('[name="mediaflow_proxy.url"]')?.value || '',
-            api_password: document.querySelector('[name="mediaflow_proxy.api_password"]')?.value || ''
+            enabled: document.querySelector('[name="mediaflow_proxy.enabled"]').checked,
+            url: document.querySelector('[name="mediaflow_proxy.url"]').value,
+            api_password: document.querySelector('[name="mediaflow_proxy.api_password"]').value
         };
     }
 
