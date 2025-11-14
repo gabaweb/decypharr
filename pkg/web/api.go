@@ -251,6 +251,9 @@ func (wb *Web) handleUpdateConfig(w http.ResponseWriter, r *http.Request) {
 	currentConfig.Repair = updatedConfig.Repair
 	currentConfig.Rclone = updatedConfig.Rclone
 
+	// Update MediaFlow Proxy config
+	currentConfig.MediaFlowProxy = updatedConfig.MediaFlowProxy
+
 	// Update Debrids
 	currentConfig.Debrids = updatedConfig.Debrids
 
